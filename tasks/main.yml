@@ -1,0 +1,66 @@
+---
+
+- name: Add user | Debian based OS
+  user:
+    name: "{{username}}"
+    groups: sudo,shadow
+    shell: /bin/bash
+    append: yes
+    generate_ssh_key: yes
+    ssh_key_bits: 4096
+    ssh_key_file: .ssh/id_rsa
+  when: ansible_os_family == "Debian"
+
+- name: Add user | Redhat based OS
+  user: 
+    name: "{{username}}"
+    groups: wheel
+    shell: /bin/bash
+    append: yes
+    generate_ssh_key: yes
+    ssh_key_bits: 4096
+    ssh_key_file: .ssh/id_rsa
+  when: ansible_os_family == "RedHat"
+
+- name: Sudo | add to sudoers file and validate
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^{{username}}'
+    line: '{{username}} ALL=(ALL) NOPASSWD:ALL'
+    validate: 'visudo -cf %s'
+  environment:
+    PATH: /usr/sbin:/usr/local/sbin:/sbin
+#environment fixes Redhat issue of hard-coded path to visudo
+
+- name: SSH Keys | Add authorized key for ssh key authentication
+  authorized_key:
+    user: "{{username}}"
+    state: present
+    key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
+
+#TODO: add new server to local known_hosts file?
+#- name: Make sure ~/.ssh exists
+#  file:
+#    state: directory
+#    path: "{{username}}/.ssh"
+#    owner: "{{username}}"
+#    group: "{{username}}"
+#    mode: 0700
+
+#-name Add server to known_hosts file
+#  known_hosts:
+#    name: {{connect_to_serverXyZ}}
+
+#- name: Ensure github.com is a known host
+#  lineinfile:
+#    state: present
+#    create: yes
+#    owner: "{{username}}"
+#    group: "{{username}}"
+#    mode: 0600
+#    dest: "/home/{{username}}/.ssh/known_hosts"
+#    line: "{{ lookup('pipe', 'ssh-keyscan -t rsa github.com') }}"
+#    regexp: "^github\\.com"
+
+
