@@ -57,7 +57,7 @@ Prep
 Usage
 ------------
 
-- Create initial ansible user, using an existing user
+Create initial ansible user, using an existing user
 
 - **username**: new ansible user to be created
 - **ansible_ssh_user**: existing user with ssh access
@@ -67,9 +67,14 @@ Usage
 
 
 ```
-ansible-playbook create-user-ansible.yml --ask-pass --become --become-method=su --ask-become-pass --extra-vars "inventory=all-dev ansible_ssh_user=user1 username=ansible" -i hosts
+ansible-playbook create-user-ansible.yml --ask-pass --become --become-method=su --ask-become-pass --extra-vars "inventory=all-dev ansible_ssh_user=username123 username=ansible" -i hosts
 ```
 
 
-
+## Note
+RHEL5 has a dependancy that needs to be installed (python-simplejson).  
+This command will use the raw module to install it:
+```
+ansible centos5 -m raw -a "yum install -y python-simplejson" --ask-pass --su --ask-su-pass --extra-vars="ansible_ssh_user=username123" -i hosts-dev
+```
 
