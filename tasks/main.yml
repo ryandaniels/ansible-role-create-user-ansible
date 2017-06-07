@@ -26,8 +26,9 @@
   lineinfile:
     dest: /etc/sudoers
     state: present
-    regexp: '^{{username}}'
-    line: '{{username}} ALL=(ALL) NOPASSWD:ALL'
+    regexp: '^{{username}} '
+#    line: '{{username}} ALL=(ALL) NOPASSWD:ALL'
+    line: "{{ username }} ALL=(ALL) {{ 'NOPASSWD:' if ( default_sudo_nopass|d(true)|bool ) else '' }}ALL"
     validate: 'visudo -cf %s'
   environment:
     PATH: /usr/sbin:/usr/local/sbin:/sbin
