@@ -89,12 +89,12 @@ ansible-playbook create-user-ansible.yml --ask-pass --become --become-method=su 
 RHEL5 has a dependency that needs to be installed: python-simplejson  
 This command will use the raw module to install it:
 ```
-ansible centos5 -m raw -a "yum install -y python-simplejson" --ask-pass --su --ask-su-pass --extra-vars="ansible_ssh_user=username123" -i hosts-dev
+ansible centos5 -m raw -a "yum install -y python-simplejson" --become --ask-pass --become-method=su --ask-become-pass --extra-vars="ansible_ssh_user=username123" -i hosts-dev
 ```
 
 ### SELinux
 If SELinux is enabled/permissive a dependency is needed: libselinux-python  
 This command will use the raw module to install it:
 ```
-ansible centos5 -m raw -a "yum install -y libselinux-python" --ask-pass --su --ask-su-pass --extra-vars="ansible_ssh_user=username123" -i hosts-dev
+ansible centos5 -m raw -a "yum install -y libselinux-python" --become --ask-pass --become-method=su --ask-become-pass --extra-vars="ansible_ssh_user=username123" -i hosts-dev
 ```

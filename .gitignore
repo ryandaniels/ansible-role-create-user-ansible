@@ -1,2 +1,7 @@
 .vaultpass
 .retry
+secret
+*.secret
+.venv
+.vscode
+*.tmp
