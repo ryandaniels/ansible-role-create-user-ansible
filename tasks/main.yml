@@ -1,7 +1,7 @@
 ---
 - name: Add user | Debian based OS
   user:
-    name: "{{username}}"
+    name: "{{ username }}"
     groups: sudo,shadow
     shell: /bin/bash
     append: yes
@@ -12,7 +12,7 @@
 
 - name: Add user | Redhat based OS
   user:
-    name: "{{username}}"
+    name: "{{ username }}"
     groups: wheel
     shell: /bin/bash
     append: yes
@@ -25,7 +25,7 @@
   lineinfile:
     dest: /etc/sudoers
     state: present
-    regexp: '^{{username}} '
+    regexp: '^{{ username }} '
 #    line: '{{username}} ALL=(ALL) NOPASSWD:ALL'
     line: "{{ username }} ALL=(ALL) {{ 'NOPASSWD:' if ( default_sudo_nopass|d(true)|bool ) else '' }}ALL"
     validate: 'visudo -cf %s'
@@ -35,6 +35,6 @@
 
 - name: SSH Keys | Add authorized key for ssh key authentication
   authorized_key:
-    user: "{{username}}"
+    user: "{{ username }}"
     state: present
     key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
